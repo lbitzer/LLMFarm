@@ -51,7 +51,6 @@
 		158172C12BC5B1480078DCDA /* tinyllama.json in Resources */ = {isa = PBXBuildFile; fileRef = 158172B42BC5B1460078DCDA /* tinyllama.json */; };
 		158172C22BC5B1480078DCDA /* phi2.json in Resources */ = {isa = PBXBuildFile; fileRef = 158172B52BC5B1460078DCDA /* phi2.json */; };
 		158172C52BC5B1480078DCDA /* StableLM-3B-4E1T.json in Resources */ = {isa = PBXBuildFile; fileRef = 158172B82BC5B1470078DCDA /* StableLM-3B-4E1T.json */; };
-		158172C62BC5B1480078DCDA /* RWKV-4 Raven Eng.json in Resources */ = {isa = PBXBuildFile; fileRef = 158172B92BC5B1470078DCDA /* RWKV-4 Raven Eng.json */; };
 		158172CA2BC5B1480078DCDA /* llama chat 2 7B.json in Resources */ = {isa = PBXBuildFile; fileRef = 158172BD2BC5B1470078DCDA /* llama chat 2 7B.json */; };
 		158DAA4E2B812A4A00550274 /* DownloadModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 158DAA4D2B812A4A00550274 /* DownloadModels.swift */; };
 		158DAA502B83BF5700550274 /* DownloadButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 158DAA4F2B83BF5700550274 /* DownloadButton.swift */; };
@@ -114,6 +113,10 @@
 		15F210962A1920AA0021F414 /* AIChatModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15F210922A1920AA0021F414 /* AIChatModel.swift */; };
 		15F210AA2A1A659B0021F414 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15F210A92A1A659B0021F414 /* Helpers.swift */; };
 		15FB67422B1BDB0800174379 /* ExportLoraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15FB67412B1BDB0800174379 /* ExportLoraView.swift */; };
+		83A9BFFD2E25DE9100432879 /* GeminiService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83A9BFFB2E25DE8900432879 /* GeminiService.swift */; };
+		83A9BFFF2E25E31900432879 /* gemini_prompt_summarize.txt in Resources */ = {isa = PBXBuildFile; fileRef = 83A9BFFE2E25E30500432879 /* gemini_prompt_summarize.txt */; };
+		83A9C0022E25ECEF00432879 /* FirebaseAI in Frameworks */ = {isa = PBXBuildFile; productRef = 83A9C0012E25ECEF00432879 /* FirebaseAI */; };
+		83A9C0052E25EDD300432879 /* GoogleGenerativeAI in Frameworks */ = {isa = PBXBuildFile; productRef = 83A9C0042E25EDD300432879 /* GoogleGenerativeAI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -268,6 +271,8 @@
 		15F210A92A1A659B0021F414 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		15F210AB2A1A7B790021F414 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		15FB67412B1BDB0800174379 /* ExportLoraView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExportLoraView.swift; sourceTree = "<group>"; };
+		83A9BFFB2E25DE8900432879 /* GeminiService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeminiService.swift; sourceTree = "<group>"; };
+		83A9BFFE2E25E30500432879 /* gemini_prompt_summarize.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = gemini_prompt_summarize.txt; sourceTree = "<group>"; };
 		E61E38F329B1F0BA00114C15 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		E61E38F529B1F12E00114C15 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		E624E2102958F21E00996CD1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -316,6 +321,7 @@
 				15A3EDD82A223CB00030AF5A /* Accelerate.framework in Frameworks */,
 				1554ABC02C26D75900A0513F /* NetworkImage in Frameworks */,
 				150992D32CC3AD8700B84BDB /* llmfarm_core in Frameworks */,
+				83A9C0022E25ECEF00432879 /* FirebaseAI in Frameworks */,
 				1554ABBD2C26D37000A0513F /* MarkdownUI in Frameworks */,
 				15DFE6042CC545D500E359F9 /* SimilaritySearchKit in Frameworks */,
 				1554ABC32C26D76900A0513F /* MarkdownUI in Frameworks */,
@@ -323,6 +329,7 @@
 				15B9D7432A4B55EA00276782 /* Metal.framework in Frameworks */,
 				156151CC2C26D28200C009D5 /* NetworkImage in Frameworks */,
 				15DFE6082CC545D500E359F9 /* SimilaritySearchKitMiniLMAll in Frameworks */,
+				83A9C0052E25EDD300432879 /* GoogleGenerativeAI in Frameworks */,
 				15B9D7442A4B55EA00276782 /* MetalKit.framework in Frameworks */,
 				150992CB2CC3AC4100B84BDB /* MarkdownUI in Frameworks */,
 				150992C82CC3AC2F00B84BDB /* NetworkImage in Frameworks */,
@@ -507,6 +514,8 @@
 		15F2107F2A191B190021F414 /* LLMFarm */ = {
 			isa = PBXGroup;
 			children = (
+				83A9BFFE2E25E30500432879 /* gemini_prompt_summarize.txt */,
+				83A9BFFB2E25DE8900432879 /* GeminiService.swift */,
 				15DFE6162CCD1F8900E359F9 /* UIComponents */,
 				15DFE60D2CC549E400E359F9 /* RAG */,
 				152838242BEAB19E000D8B82 /* Intents */,
@@ -676,6 +685,8 @@
 				15DFE6052CC545D500E359F9 /* SimilaritySearchKitDistilbert */,
 				15DFE6072CC545D500E359F9 /* SimilaritySearchKitMiniLMAll */,
 				15DFE6092CC545D500E359F9 /* SimilaritySearchKitMiniLMMultiQA */,
+				83A9C0012E25ECEF00432879 /* FirebaseAI */,
+				83A9C0042E25EDD300432879 /* GoogleGenerativeAI */,
 			);
 			productName = LLMFarm;
 			productReference = 15F2107E2A191B190021F414 /* LLMFarm.app */;
@@ -689,7 +700,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1520;
-				LastUpgradeCheck = 1420;
+				LastUpgradeCheck = 1610;
 				TargetAttributes = {
 					15B1B9C72AF023080058F275 = {
 						CreatedOnToolsVersion = 15.0.1;
@@ -719,6 +730,8 @@
 				150992C92CC3AC4100B84BDB /* XCLocalSwiftPackageReference "swift-markdown-ui" */,
 				150992CF2CC3AD4F00B84BDB /* XCLocalSwiftPackageReference "llmfarm_core.swift" */,
 				15DFE6022CC545D500E359F9 /* XCLocalSwiftPackageReference "similarity-search-kit" */,
+				83A9C0002E25ECEF00432879 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				83A9C0032E25EDD300432879 /* XCRemoteSwiftPackageReference "generative-ai-swift" */,
 			);
 			productRefGroup = E624E1FF2958ECC800996CD1 /* Products */;
 			projectDirPath = "";
@@ -760,6 +773,7 @@
 				15F210892A191B1B0021F414 /* Preview Assets.xcassets in Resources */,
 				15F210852A191B1B0021F414 /* Assets.xcassets in Resources */,
 				1528382D2BF3E1EE000D8B82 /* LLaMa3 Instruct.json in Resources */,
+				83A9BFFF2E25E31900432879 /* gemini_prompt_summarize.txt in Resources */,
 				1533934D2C404F2D009E0705 /* demo_chat.json in Resources */,
 				15D81B002BDAC0E900C3B5CE /* phi3.json in Resources */,
 				155D5B012BE2285300E43E18 /* Gemma.json in Resources */,
@@ -772,7 +786,6 @@
 				15C08A6A2BA5CB2C000A1BE0 /* MobileVLM.json in Resources */,
 				153393532C40531A009E0705 /* Pythia410m-V0-Instruct.Q6_K_split.gguf-00004-of-00004.gguf in Resources */,
 				153393522C40531A009E0705 /* Pythia410m-V0-Instruct.Q6_K_split.gguf-00001-of-00004.gguf in Resources */,
-				158172C62BC5B1480078DCDA /* RWKV-4 Raven Eng.json in Resources */,
 				154237382C62895A00CFE9FF /* Gemma 2.json in Resources */,
 				15B7165D2C29B89500CA600B /* ChatML.json in Resources */,
 				15386FB22CAE836400652FA0 /* Bunny.json in Resources */,
@@ -857,6 +870,7 @@
 				1509BA602B1E6FD400703BC0 /* Extensions.swift in Sources */,
 				15B716532C270BE300CA600B /* PredictionSettingsView.swift in Sources */,
 				1524FB6F2CC29A6800E99C3F /* ChatSettingsTabs.swift in Sources */,
+				83A9BFFD2E25DE9100432879 /* GeminiService.swift in Sources */,
 				1524FB752CC2D16300E99C3F /* AppSettingsTabs.swift in Sources */,
 				15A3EDCA2A2121D90030AF5A /* SettingsHeaderItem.swift in Sources */,
 				15DFE6012CC5192000E359F9 /* About.swift in Sources */,
@@ -883,7 +897,7 @@
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = C66ZA422A7;
+				DEVELOPMENT_TEAM = 9X2NM4Y4K3;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
@@ -901,7 +915,7 @@
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = C66ZA422A7;
+				DEVELOPMENT_TEAM = 9X2NM4Y4K3;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
@@ -986,7 +1000,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_ASSET_PATHS = "\"LLMFarm/Preview Content\"";
-				DEVELOPMENT_TEAM = C66ZA422A7;
+				DEVELOPMENT_TEAM = 9X2NM4Y4K3;
 				ENABLE_HARDENED_RUNTIME = YES;
 				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = YES;
 				ENABLE_PREVIEWS = NO;
@@ -1012,7 +1026,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
 				MARKETING_VERSION = 1.4.5;
-				PRODUCT_BUNDLE_IDENTIFIER = com.guinmoon.LLMFarm;
+				PRODUCT_BUNDLE_IDENTIFIER = com.guinmoon.LLMFarm.lbitzer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = auto;
@@ -1039,7 +1053,7 @@
 				CURRENT_PROJECT_VERSION = 14;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_ASSET_PATHS = "\"LLMFarm/Preview Content\"";
-				DEVELOPMENT_TEAM = C66ZA422A7;
+				DEVELOPMENT_TEAM = 9X2NM4Y4K3;
 				ENABLE_HARDENED_RUNTIME = YES;
 				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = YES;
 				ENABLE_PREVIEWS = NO;
@@ -1064,7 +1078,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
 				MARKETING_VERSION = 1.4.5;
-				PRODUCT_BUNDLE_IDENTIFIER = com.guinmoon.LLMFarm;
+				PRODUCT_BUNDLE_IDENTIFIER = com.guinmoon.LLMFarm.lbitzer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = auto;
@@ -1262,6 +1276,25 @@
 		};
 /* End XCLocalSwiftPackageReference section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		83A9C0002E25ECEF00432879 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.15.0;
+			};
+		};
+		83A9C0032E25EDD300432879 /* XCRemoteSwiftPackageReference "generative-ai-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google-gemini/generative-ai-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.5.6;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		150992C72CC3AC2F00B84BDB /* NetworkImage */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -1322,6 +1355,16 @@
 		15DFE6092CC545D500E359F9 /* SimilaritySearchKitMiniLMMultiQA */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SimilaritySearchKitMiniLMMultiQA;
+		};
+		83A9C0012E25ECEF00432879 /* FirebaseAI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 83A9C0002E25ECEF00432879 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAI;
+		};
+		83A9C0042E25EDD300432879 /* GoogleGenerativeAI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 83A9C0032E25EDD300432879 /* XCRemoteSwiftPackageReference "generative-ai-swift" */;
+			productName = GoogleGenerativeAI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

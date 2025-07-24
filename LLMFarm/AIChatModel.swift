@@ -66,6 +66,10 @@ final class AIChatModel: ObservableObject {
     @Published var cur_eval_token_num: Int = 0
     @Published var query_tokens_count: Int = 0
     
+    @Published var geminiThinking = false
+    private let geminiService = GeminiService()
+    private var conversationTranscript: [String] = []
+    
     public init() {
         let ragDir = GetRagDirRelPath(chat_name: self.chat_name)
         ragUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent(ragDir) ?? URL(fileURLWithPath: "")
@@ -336,6 +340,10 @@ final class AIChatModel: ObservableObject {
     }
     
     public func Send(message in_text: String, append_user_message: Bool = true, system_prompt: String? = nil, attachment: String? = nil, attachment_type: String? = nil, useRag: Bool = false) async {
+        
+        print("Send method called with: \(in_text)")
+        await quickTestGemini(in_text)
+        
         self.AI_typing += 1
         
         if append_user_message {
@@ -389,5 +397,24 @@ final class AIChatModel: ObservableObject {
         }, { final_str in
             self.finish_completion(final_str, &message)
         }, system_prompt: system_prompt, img_path: img_real_path)
+    }
+    
+    private func quickTestGemini(_ input: String) async {
+        print("Starting Gemini test...")
+        
+        let geminiService = GeminiService()
+        
+        do {
+            print("About to call streamThoughts...")
+            
+            for try await thought in geminiService.streamThoughts(transcript: "User: \(input)") {
+                print("Gemini thought: \(thought)")
+            }
+            
+            print("Gemini test completed")
+            
+        } catch {
+            print("Gemini test error: \(error)")
+        }
     }
 }
