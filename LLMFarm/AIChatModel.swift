@@ -79,7 +79,7 @@ final class AIChatModel: ObservableObject {
         let ragDir = GetRagDirRelPath(chat_name: self.chat_name)
         ragUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent(ragDir) ?? URL(fileURLWithPath: "")
     }
-
+    
     private func model_load_progress_callback(_ progress: Float) -> Bool {
         DispatchQueue.main.async {
             self.load_progress = progress
@@ -95,18 +95,18 @@ final class AIChatModel: ObservableObject {
         }
         return false
     }
-
+    
     private func after_model_load(_ load_result: String, in_text: String, attachment: String? = nil, attachment_type: String? = nil) {
         guard load_result == "[Done]", let chatModel = self.chat?.model, chatModel.context != nil else {
             self.finish_load(append_err_msg: true, msg_text: "Load Model Error: \(load_result)")
             return
         }
-
+        
         self.finish_load()
         var system_prompt: String? = nil
         if chatModel.contextParams.system_prompt != "", chatModel.nPast == 0 {
             system_prompt = chatModel.contextParams.system_prompt  + "\n"
-            self.messages[self.messages.endIndex - 1].header = chatModel.contextParams.system_prompt 
+            self.messages[self.messages.endIndex - 1].header = chatModel.contextParams.system_prompt
         }
         chatModel.parse_skip_tokens()
         Task {
@@ -125,7 +125,7 @@ final class AIChatModel: ObservableObject {
             try? FileManager.default.removeItem(atPath: self.state_dump_path)
         }
     }
-
+    
     public func reload_chat(_ chat_selection: Dictionary<String, String>) {
         self.stop_predict()
         self.chat_name = chat_selection["chat"] ?? "Not selected"
@@ -139,7 +139,7 @@ final class AIChatModel: ObservableObject {
         self.ragIndexLoaded = false
         self.AI_typing = -Int.random(in: 0..<100000)
     }
-
+    
     public func update_chat_params() {
         guard let chat_config = getChatInfo(self.chat?.chatName ?? "") else { return }
         self.chat?.model?.contextParams = get_model_context_param_by_config(chat_config)
@@ -163,7 +163,7 @@ final class AIChatModel: ObservableObject {
         if let grammar = chat_config["grammar"] as? String, grammar != "<None>", grammar != "" {
             model_context_param.grammar_path = get_grammar_path_by_name(grammar)
         }
-
+        
         self.chunkSize = chat_config["chunk_size"] as? Int ?? self.chunkSize
         self.chunkOverlap = chat_config["chunk_overlap"] as? Int ?? self.chunkOverlap
         self.ragTop = chat_config["rag_top"] as? Int ?? self.ragTop
@@ -185,7 +185,7 @@ final class AIChatModel: ObservableObject {
         
         return true
     }
-
+    
     public func load_model_by_chat_name(_ chat_name: String, in_text: String, attachment: String? = nil, attachment_type: String? = nil) -> Bool? {
         self.model_loading = true
         
@@ -201,7 +201,7 @@ final class AIChatModel: ObservableObject {
             self.after_model_load(load_result, in_text: in_text, attachment: attachment, attachment_type: attachment_type)
         }
         self.chat?.loadModel()
-            
+        
         return true
     }
     
@@ -212,7 +212,7 @@ final class AIChatModel: ObservableObject {
         }
         messages_lock.unlock()
     }
-
+    
     public func save_chat_history_and_state() {
         save_chat_history(self.messages, self.chat_name + ".json")
         self.chat?.model?.save_state()
@@ -220,7 +220,7 @@ final class AIChatModel: ObservableObject {
     
     public func stop_predict(is_error: Bool = false) {
         self.chat?.flagExit = true
-        self.total_sec = Double((DispatchTime.now().uptimeNanoseconds - self.start_predicting_time.uptimeNanoseconds)) / 1_000_000_000        
+        self.total_sec = Double((DispatchTime.now().uptimeNanoseconds - self.start_predicting_time.uptimeNanoseconds)) / 1_000_000_000
         if let last_message = messages.last {
             messages_lock.lock()
             if last_message.state == .predicting || last_message.state == .none {
@@ -263,7 +263,7 @@ final class AIChatModel: ObservableObject {
         if check, self.chat?.flagExit != true, self.chat_name == self.chat?.chatName {
             message.state = .predicting
             message.text += str
-            self.AI_typing += 1            
+            self.AI_typing += 1
             update_last_message(&message)
             self.numberOfTokens += 1
         } else {
@@ -277,10 +277,10 @@ final class AIChatModel: ObservableObject {
             self.messages.append(Message(sender: .system, state: .error, text: msg_text, tok_sec: 0))
             self.stop_predict(is_error: true)
         }
-        self.state = .completed        
+        self.state = .completed
         self.Title = self.title_backup
     }
-
+    
     public func finish_completion(_ final_str: String, _ message: inout Message) {
         self.cur_t_name = ""
         self.load_progress = 0
@@ -302,7 +302,7 @@ final class AIChatModel: ObservableObject {
         }
         self.save_chat_history_and_state()
     }
-
+    
     public func LoadRAGIndex(ragURL: URL) async {
         updateIndexComponents(currentModel: currentModel, comparisonAlgorithm: comparisonAlgorithm, chunkMethod: chunkMethod)
         await loadExistingIndex(url: ragURL, name: "RAG_index")
@@ -330,7 +330,7 @@ final class AIChatModel: ObservableObject {
             }
         }
     }
-
+    
     public func SetSendMsgTokensCount(_ count: Int) {
         // Implementation here
     }
@@ -341,8 +341,7 @@ final class AIChatModel: ObservableObject {
     
     public func Send(message in_text: String, append_user_message: Bool = true, system_prompt: String? = nil, attachment: String? = nil, attachment_type: String? = nil, useRag: Bool = false) async {
         
-        print("Send method called with: \(in_text)")
-        await quickTestGemini(in_text)
+        await processWithGeminiAndSmolLM(in_text)
         
         self.AI_typing += 1
         
@@ -381,7 +380,7 @@ final class AIChatModel: ObservableObject {
         
         self.state = .completed
         self.chat?.chatName = self.chat_name
-        self.chat?.flagExit = false        
+        self.chat?.flagExit = false
         var message = Message(sender: .system, text: "", tok_sec: 0)
         self.messages.append(message)
         self.numberOfTokens = 0
@@ -399,22 +398,282 @@ final class AIChatModel: ObservableObject {
         }, system_prompt: system_prompt, img_path: img_real_path)
     }
     
-    private func quickTestGemini(_ input: String) async {
-        print("Starting Gemini test...")
+    
+    // Build ChatML prompt for SmolLM (same format as your Python script)
+    private func buildSmolLMPrompt(userInput: String, thoughts: [String], responses: [String]) -> String {
+        var prompt = "<|im_start|>user\n\(userInput)<|im_end|>\n"
         
-        let geminiService = GeminiService()
+        if responses.isEmpty {
+            // First thought, no previous responses
+            if !thoughts.isEmpty {
+                prompt += "<|im_start|>knowledge\n\(thoughts[0])<|im_end|>\n"
+                prompt += "<|im_start|>assistant\n"  // Add this line to prompt for assistant response
+            }
+        } else {
+            // Multi-turn: build history of thought->response pairs
+            let numResponses = responses.count
+            for i in 0..<numResponses {
+                prompt += "<|im_start|>knowledge\n\(thoughts[i])<|im_end|>\n"
+                prompt += "<|im_start|>assistant\n\(responses[i])<|im_end|>\n"
+            }
+            // Add current thought if we have more thoughts than responses
+            if thoughts.count > responses.count {
+                prompt += "<|im_start|>knowledge\n\(thoughts[responses.count])<|im_end|>\n"
+                prompt += "<|im_start|>assistant\n"  // Add this line
+            }
+        }
         
-        do {
-            print("About to call streamThoughts...")
-            
-            for try await thought in geminiService.streamThoughts(transcript: "User: \(input)") {
-                print("Gemini thought: \(thought)")
+        return prompt
+    }
+    
+    private func generateLocalResponse(prompt: String) async -> String? {
+        return await withCheckedContinuation { (continuation: CheckedContinuation<String?, Never>) in
+            guard let chat = self.chat else {
+                continuation.resume(returning: nil)
+                return
             }
             
-            print("Gemini test completed")
-            
-        } catch {
-            print("Gemini test error: \(error)")
+            var result = ""
+            chat.conversation(prompt, { str, time in
+                result += str
+                // Don't return anything - the closure expects Void
+            }, { key, value in
+                // Handle key-value pairs if needed
+            }, { final_str in
+                continuation.resume(returning: result)
+            }, system_prompt: nil)  // Add the missing system_prompt parameter
         }
+    }
+    
+    // Clean SmolLM response (remove ChatML tokens)
+    private func cleanSmolLMResponse(_ response: String) -> String {
+        var cleaned = response
+        
+        // Remove all variations of assistant tokens
+        cleaned = cleaned.replacingOccurrences(of: "<|im_start|>assistant\n", with: "")
+        cleaned = cleaned.replacingOccurrences(of: "<|im_start|>assistant", with: "")
+        cleaned = cleaned.replacingOccurrences(of: "<|im_end|>", with: "")
+        cleaned = cleaned.replacingOccurrences(of: "assistant\n", with: "")
+        cleaned = cleaned.replacingOccurrences(of: "assistant", with: "")
+        
+        // Clean up whitespace and newlines
+        cleaned = cleaned.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        // Remove multiple spaces
+        cleaned = cleaned.replacingOccurrences(of: "  +", with: " ", options: .regularExpression)
+        
+        return cleaned
+    }
+    
+    // Shared state actor
+    actor SharedState {
+        private var thoughts: [String] = []
+        private var responses: [String] = []
+        private var fullResponse = ""
+        private var isGeminiDone = false
+        
+        func addThought(_ thought: String) {
+            thoughts.append(thought)
+        }
+        
+        func addResponse(_ response: String) {
+            responses.append(response)
+            fullResponse += (fullResponse.isEmpty ? "" : " ") + response
+        }
+        
+        func getThoughts() -> [String] { thoughts }
+        func getResponses() -> [String] { responses }
+        func getFullResponse() -> String { fullResponse }
+        
+        func setGeminiDone() { isGeminiDone = true }
+        func isGeminiComplete() -> Bool { isGeminiDone }
+        func getProcessedCount() -> Int { responses.count }
+        func getAvailableThoughts() -> Int { thoughts.count }
+    }
+
+    private func processWithGeminiAndSmolLM(_ input: String) async {
+        let geminiService = GeminiService()
+        
+        // FIRST: Ensure model is loaded before starting dual-model processing
+        if self.chat?.model?.context == nil {
+            print("DEBUG: Model not loaded, loading now...")
+            
+            // Set the correct model path
+            self.modelURL = "/Users/lawrencebitzer/Documents/Conversational/conv-fill-06202025.gguf"
+            self.model_name = "conv-fill-06202025.gguf"
+            
+            // Load the model synchronously first
+            if let _ = load_model_by_chat_name_prepare(self.chat_name, in_text: input) {
+                print("DEBUG: Model prepare completed, now loading...")
+                let _ = load_model_by_chat_name(self.chat_name, in_text: input)
+                
+                // Wait for model to finish loading
+                while self.model_loading {
+                    print("DEBUG: Waiting for model to load...")
+                    try? await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
+                }
+                
+                if self.chat?.model?.context != nil {
+                    print("DEBUG: Model loaded successfully!")
+                } else {
+                    print("DEBUG: Model failed to load")
+                    return
+                }
+            } else {
+                print("DEBUG: Model prepare failed")
+                return
+            }
+        } else {
+            print("DEBUG: Model already loaded")
+        }
+        
+        // Create initial response message
+        var responseMessage = Message(sender: .system, text: "Thinking...", tok_sec: 0)
+        self.messages.append(responseMessage)
+        
+        // Shared state between threads
+        let sharedState = SharedState()
+        
+        // Build conversation context
+        let transcript = conversationTranscript.joined(separator: "\n") +
+                        (conversationTranscript.isEmpty ? "" : "\n") +
+                        "User: \(input)"
+        
+        // Start Gemini task
+        async let geminiTask: () = Task {
+            do {
+                for try await thought in geminiService.streamThoughts(transcript: transcript) {
+                    if thought == "[done]" {
+                        print("DEBUG: Gemini received [done] signal")
+                        await sharedState.setGeminiDone()
+                        break
+                    }
+                    print("Gemini produced thought: \(thought)")
+                    await sharedState.addThought(thought)
+                }
+                print("DEBUG: Gemini stream completed, setting done flag")
+                await sharedState.setGeminiDone()
+            } catch {
+                print("Gemini error: \(error)")
+                await sharedState.setGeminiDone()
+            }
+        }.value
+        
+        // Start SmolLM task
+        async let smolLMTask: () = Task {
+            await processSmolLMThoughts(input: input, sharedState: sharedState, chatModel: self)
+        }.value
+        
+        // Wait for both tasks to complete
+        _ = await (geminiTask, smolLMTask)
+        
+        // Final UI update - mark as completed
+        let finalResponse = await sharedState.getFullResponse()
+        await MainActor.run {
+            responseMessage.state = .predicted(totalSecond: 0.0)
+            responseMessage.tok_sec = 0.0
+            responseMessage.text = finalResponse
+            self.messages[self.messages.count - 1] = responseMessage
+        }
+        
+        // Add to conversation transcript
+        if !finalResponse.isEmpty {
+            conversationTranscript.append("User: \(input)")
+            conversationTranscript.append("Assistant: \(finalResponse)")
+        }
+        
+        print("Dual-model processing completed")
+    }
+
+    private func processSmolLMThoughts(input: String, sharedState: SharedState, chatModel: AIChatModel) async {
+        print("DEBUG: SMOLLM TASK STARTED")
+        var loopCount = 0
+        let maxLoops = 100
+        
+        while loopCount < maxLoops {
+            print("DEBUG: STARTING LOOP ITERATION \(loopCount)")
+            loopCount += 1
+            
+            let thoughtCount = await sharedState.getAvailableThoughts()
+            let processedCount = await sharedState.getProcessedCount()
+            let isGeminiDone = await sharedState.isGeminiComplete()
+            
+            print("DEBUG: Loop \(loopCount) - thoughtCount=\(thoughtCount), processedCount=\(processedCount), isGeminiDone=\(isGeminiDone)")
+            
+            if isGeminiDone && processedCount >= thoughtCount {
+                print("SmolLM finished - no more thoughts to process")
+                break
+            }
+            
+            if processedCount < thoughtCount {
+                let thoughts = await sharedState.getThoughts()
+                let responses = await sharedState.getResponses()
+                let currentThought = thoughts[processedCount]
+                
+                print("DEBUG: Processing thought \(processedCount): '\(currentThought)'")
+                
+                // Build prompt
+                var prompt = "<|im_start|>user\n\(input)<|im_end|>\n"
+                let thoughtsToUse = Array(thoughts.prefix(processedCount + 1))
+                
+                if responses.isEmpty {
+                    if !thoughtsToUse.isEmpty {
+                        prompt += "<|im_start|>knowledge\n\(thoughtsToUse[0])<|im_end|>\n"
+                        prompt += "<|im_start|>assistant\n"
+                    }
+                } else {
+                    let numResponses = responses.count
+                    for i in 0..<numResponses {
+                        prompt += "<|im_start|>knowledge\n\(thoughtsToUse[i])<|im_end|>\n"
+                        prompt += "<|im_start|>assistant\n\(responses[i])<|im_end|>\n"
+                    }
+                    if thoughtsToUse.count > responses.count {
+                        prompt += "<|im_start|>knowledge\n\(thoughtsToUse[responses.count])<|im_end|>\n"
+                        prompt += "<|im_start|>assistant\n"
+                    }
+                }
+                
+                print("DEBUG: Built prompt, calling generateLocalResponse...")
+                
+                // Generate response using local model
+                if let response = await chatModel.generateLocalResponse(prompt: prompt) {
+                    // Clean the response
+                    var cleanResponse = response
+                    cleanResponse = cleanResponse.replacingOccurrences(of: "<|im_start|>assistant\n", with: "")
+                    cleanResponse = cleanResponse.replacingOccurrences(of: "<|im_start|>assistant", with: "")
+                    cleanResponse = cleanResponse.replacingOccurrences(of: "<|im_end|>", with: "")
+                    cleanResponse = cleanResponse.trimmingCharacters(in: .whitespacesAndNewlines)
+                    
+                    if !cleanResponse.isEmpty {
+                        print("DEBUG: Generated response: '\(cleanResponse)'")
+                        await sharedState.addResponse(cleanResponse)
+                        
+                        // Update UI immediately
+                        let fullResponse = await sharedState.getFullResponse()
+                        await MainActor.run {
+                            var currentMessage = chatModel.messages[chatModel.messages.count - 1]
+                            currentMessage.text = fullResponse
+                            currentMessage.state = .predicting
+                            chatModel.messages[chatModel.messages.count - 1] = currentMessage
+                        }
+                    } else {
+                        print("DEBUG: Empty response, using fallback")
+                        await sharedState.addResponse("I understand.")
+                    }
+                } else {
+                    print("DEBUG: generateLocalResponse returned nil, using fallback")
+                    await sharedState.addResponse("That's interesting!")
+                }
+                
+                print("DEBUG: Added response successfully")
+            } else {
+                print("DEBUG: Waiting for more thoughts...")
+                try? await Task.sleep(nanoseconds: 100_000_000)
+            }
+            
+            try? await Task.sleep(nanoseconds: 10_000_000)
+        }
+        
+        print("DEBUG: SMOLLM TASK FINISHED")
     }
 }

@@ -11,7 +11,7 @@ import Foundation
 
 class GeminiService: ObservableObject {
     
-    private let apiKey = "YOUR_GEMINI_API_KEY" // TODO: Replace with actual key
+    private let apiKey = "" // TODO: Replace with actual key
     private let baseURL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:streamGenerateContent"
     
     // Cache the template so we don't read the file every time
@@ -85,7 +85,7 @@ class GeminiService: ObservableObject {
             }
         }
     }
-    
+    /*
     private func buildPrompt(transcript: String) -> String {
         // Load template if not already cached
         if promptTemplate == nil {
@@ -104,6 +104,35 @@ class GeminiService: ObservableObject {
         
         // Replace {{conversation}} with actual transcript
         return template.replacingOccurrences(of: "{{conversation}}", with: transcript)
+    }
+     */
+    
+    private func buildPrompt(transcript: String) -> String {
+        return """
+        Your job is to take the previous turns of the conversation and respond with distinct thoughts that could answer, separated by [bt], begin thought, and [et], end thought. The thoughts should be as short as possible while preserving meaning. Output only the spans of [bt] and [et].
+        First think of a good response, then summarize it. Be concise. Be proactive sometimes. Stay on topic.
+        Your distinct thoughts should be as if they were human thoughts, short, not full sentences but conveying the point of how you would continue an engaging conversation.
+        When you are done with all the thoughts, output the [done] token. They are NOT your internal thoughts, but rather the content of ONLY what you will say.
+        Thought rules:
+                * Thoughts should be hints about meaningful information
+                * Questions that continue the conversation are meaningful
+                * Advice can be meaningful
+                * Giving recommendations when the user asks is meaningful
+                * Explaining a concept can be meaningful
+                * Demonstrate understanding
+        Do not have thoughts that:
+                * Contain empathetic phrases
+                * Paraphrase user words
+                * Fill with useless words
+        Example Conversation:
+        User: Hey there, I just went to the park the other day and it was so nice!
+        Responder: Wow nice! The weather is getting nicer these days isn't it? What did you do there?
+        User: I was walking Buster and I took a few nice photos with the cherry blossoms, have you been?
+        Your thoughts for responding: Oh very nice! Can I see photos of the cherry blossoms? I personally haven't been to see them yet. I really hope I don't miss them!
+        Your response: [bt]Can I see photos?[et][bt]I haven't been yet.[et]Hope I don't miss.[et][done]
+        Here is the conversation:
+        \(transcript)
+        """
     }
 
     // Add back the loadTemplate method
