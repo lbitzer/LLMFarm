@@ -499,7 +499,7 @@ final class AIChatModel: ObservableObject {
             print("DEBUG: Model not loaded, loading now...")
             
             // Set the correct model path
-            self.modelURL = "/Users/lawrencebitzer/Documents/Conversational/conv-fill-06202025.gguf"
+            self.modelURL = "" // YOUR PATH TO GGUF FILE
             self.model_name = "conv-fill-06202025.gguf"
             
             // Load the model synchronously first
